@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+<!-- body -->
+<div class="container-fluid mt-3">
+	<div class="row">
+		<!-- search form -->
+
+		<!-- filter -->
+        <h2>Open Cv page for {{product.name}}</h2>
+		
+
+		<!-- all products -->
+		<div id="products" class="col-lg-9 mx-auto">
+			<div class="row mx-auto">
+				<div class="card mx-auto mb-3" id="{{ product.id }}" style="width: 18rem;">
+					<div class="card-body">
+
+						<a href="{% url 'try_on_glasses' product.id %}"> Try on {{ product.image.url }}</a>
+					</div>
+					
+				</div>
+				<!-- display search results -->
+			</div>
+	    </div>
+	</div>
+</div>
+
+{% endblock %}

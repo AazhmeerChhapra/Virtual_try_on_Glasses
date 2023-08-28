@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.querySelector('form');
+
+    searchForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const searchQuery = document.getElementById('searchInput').value;
+
+
+      fetch('/search', {
+        method: 'POST',
+        body: JSON.stringify({ query: searchQuery }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Search request failed.');
+          }
+          return response.json();
+        })
+        .then(data => {
+
+          displaySearchResults(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Search request failed. Please try again.');
+        });
+    });
+
+    function displaySearchResults(results) {
+
+      const searchResultsContainer = document.getElementById('searchResults');
+
+
+      searchResultsContainer.innerHTML = '';
+
+      // Iterate over the search results and create HTML elements to display them
+      results.forEach(result => {
+        // Create a div element for each search result
+        const resultDiv = document.createElement('div');
+        resultDiv.textContent = result.title;
+
+        // Append the result div to the search results container
+        searchResultsContainer.appendChild(resultDiv);
+      });
+    }
+  });
+</script>
+
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <title>Virtual Try-On Glasses</title>
+
+  <style>
+    nav{
+      background-color: green;
+    }
+    .one-edge-shadow {
+      box-shadow: 0 8px 2px -5px rgb(246, 245, 245);
+    }
+    .display-8{
+      font-weight: 200;
+      font-size: 30px;
+      font-colour: $teal-200;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="one-edge-shadow navbar navbar-light sticky-top navbar-expand-lg text-white">
+    <a class="navbar-brand ms-3 text-dark " href="/">
+      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width:50px;height:50px,color:text-light;">Virtual Try-On Glasses
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/store">Store <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      <ul class="navbar-nav my-2 my-lg-0">
+        <li class="nav-item active ">
+          <a class="nav-link" href="/quiz">Quiz</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/cart">Cart
+            <span class="badge badge-success">{{request.session.cart.keys|length}}</span>
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+
+        <li class="nav-item active">
+          <a href="{% url 'favourite_items' %}" class = "nav-link">Save Favourite</a>
+          </a>
+        </li>
+        {% if request.session.customer %}
+        <li class="nav-item active ">
+          <a class="nav-link" href="/orders">Orders<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">Signup<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Login<span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <div class="navbar">
+        <form class="d-flex">
+<!--&lt;!&ndash;          <input class="form-control me-2 ms-auto" type="search" id="searchInput" placeholder="Search here" aria-label="Search">&ndash;&gt;-->
+<!--          <button class="btn btn-outline-success" type="submit">Search</button>-->
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
